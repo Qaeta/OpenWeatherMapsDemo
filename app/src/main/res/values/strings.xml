@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Open Weather Map Demo</string>
+    <string name="enter_city">Please enter a city</string>
+    <string name="city_hint">ex. Saint John,NB,CA</string>
+    <string name="or_select_city">Or Select One</string>
+    <string name="get_weather">Get Weather!</string>
+    <string name="city">City: </string>
+    <string name="switch_temp">Switch C / F</string>
+    <string name="temp">Temperature: </string>
+    <string name="degree_symbol">°</string>
+    <string name="weather">Weather: </string>
+    <string name="humidity">Humidity: </string>
+    <string name="ok">OK</string>
+
+    <!-- Favourite Cities Dropdown Items -->
+    <string-array name="favourite_cities">
+        <item>Saint John,NB,CA</item>
+        <item>Guelph,ON,CA</item>
+        <item>Mountain View,CA,US</item>
+    </string-array>
+
+    <!-- Strings for help dialog -->
+    <string name="fail_dialog_title">Failed to Retrieve Weather</string>
+    <string name="fail_dialog_message">
+        Please try again. City should be in {city},{two letter province code},
+        {two letter country code} format. EX. Hamilton,ON,CA\n\n
+
+        If you are still experiencing issues, the city may not have a weather listing, or you may
+        be having connectivity issues.
+    </string>
+</resources>

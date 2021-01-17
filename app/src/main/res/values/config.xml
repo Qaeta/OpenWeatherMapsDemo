@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="open_weather_map_endpoint">https://api.openweathermap.org/data/2.5/</string>
+    <string name="open_weather_map_api_key">{YOUR-API-KEY-HERE}</string>
+</resources>
