@@ -5,6 +5,7 @@ package ca.qtechns.openweathermapdemo
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
@@ -55,9 +56,11 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 GlobalScope.launch {
+                    runOnUiThread { progressBar.visibility = View.VISIBLE }
                     val weather = weatherJob.await()
                     runOnUiThread {
                         updateWeather(weather)
+                        progressBar.visibility = View.GONE
                     }
                 }
             }
@@ -125,6 +128,7 @@ class MainActivity : AppCompatActivity() {
      * the weather in the UI.
      */
     private fun failedToGetWeather(){
+        progressBar.visibility = View.GONE
         val alertDialog: AlertDialog = this.let {
             val builder = AlertDialog.Builder(it)
             builder.apply {
