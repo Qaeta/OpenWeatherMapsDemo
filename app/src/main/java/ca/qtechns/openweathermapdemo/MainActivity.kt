@@ -3,11 +3,15 @@
  */
 package ca.qtechns.openweathermapdemo
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
@@ -46,23 +50,14 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.buttonGetWeather)
             .setOnClickListener {
                 val city: String = if (editTextCity.text.isNotEmpty()) {
-                    editTextCity.text.toString()
+                    val input = editTextCity.text.toString()
+                    editTextCity.text.clear()
+                    input
                 } else {
                     spinnerFavouriteCities.selectedItem.toString()
                 }
 
-                val weatherJob = GlobalScope.async {
-                        OpenWeatherMap.getCurrentWeather(city)
-                }
-
-                GlobalScope.launch {
-                    runOnUiThread { progressBar.visibility = View.VISIBLE }
-                    val weather = weatherJob.await()
-                    runOnUiThread {
-                        updateWeather(weather)
-                        progressBar.visibility = View.GONE
-                    }
-                }
+                fetchWeather(city)
             }
 
         findViewById<Button>(R.id.btnCorF)
@@ -81,6 +76,41 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+
+        // Set listener for submission via keyboard
+        editTextCity.setOnEditorActionListener{ v, actionId, _ ->
+            if(actionId == EditorInfo.IME_ACTION_DONE) {
+                val city = editTextCity.text.toString()
+                editTextCity.text.clear()
+                // Hide the keyboard explicitly, as some devices were leaving it up on submission.
+                editTextCity.hideKeyboard()
+
+                fetchWeather(city)
+                true
+            } else {
+                false
+            }
+        }
+    }
+
+    /**
+     * Start the weather fetching process.
+     *
+     * @param city The city to fetch weather data about.
+     */
+    private fun fetchWeather(city: String) {
+        val weatherJob = GlobalScope.async {
+            OpenWeatherMap.getCurrentWeather(city)
+        }
+
+        GlobalScope.launch {
+            runOnUiThread { progressBar.visibility = View.VISIBLE }
+            val weather = weatherJob.await()
+            runOnUiThread {
+                updateWeather(weather)
+                progressBar.visibility = View.GONE
+            }
+        }
     }
 
     /**
@@ -141,5 +171,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         alertDialog.show()
+    }
+
+    /**
+     * Hides the keyboard.
+     */
+    fun View.hideKeyboard() {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
     }
 }
